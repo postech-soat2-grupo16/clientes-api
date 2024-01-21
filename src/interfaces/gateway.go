@@ -9,5 +9,5 @@ type ClienteGatewayI interface {
 	Update(cliente entities.Cliente) (*entities.Cliente, error)
 	Delete(clienteID uint32) error
 	GetByID(clienteID uint32) (*entities.Cliente, error)
-	GetAll(conds ...interface{}) ([]entities.Cliente, error)
+	GetAll(conds ...interface{}) (*[]entities.Cliente, error)
 }

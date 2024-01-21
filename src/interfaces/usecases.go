@@ -5,7 +5,7 @@ import (
 )
 
 type ClienteUseCase interface {
-	List(cpf string) ([]entities.Cliente, error)
+	List(cpf string) (*[]entities.Cliente, error)
 	Create(email, cpf, nome string) (*entities.Cliente, error)
 	GetByID(clienteID uint32) (*entities.Cliente, error)
 	Update(clienteID uint32, email, cpf, nome string) (*entities.Cliente, error)
