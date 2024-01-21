@@ -44,7 +44,7 @@ resource "aws_lb_target_group" "tg_clientes_api" {
 # Listener Rule that forwards the request to clientes-api TG
 resource "aws_lb_listener_rule" "listener_clientes_api" {
   listener_arn = var.alb_fastfood_listener_arn
-  priority     = 100
+  priority     = 200
 
   condition {
     path_pattern {
@@ -91,6 +91,11 @@ resource "aws_ecs_task_definition" "task_definition_clientes_api" {
           appProtocol   = "http"
         }
       ]
+
+      environment = [
+        { "name" : "DATABASE_URL", "value" : var.db_url }
+      ]
+
 
       logConfiguration = {
         logDriver = "awslogs",
