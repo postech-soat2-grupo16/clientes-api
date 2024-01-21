@@ -59,7 +59,7 @@ func (g *Gateway) GetByID(clienteID uint32) (*entities.Cliente, error) {
 	return &cliente, nil
 }
 
-func (g *Gateway) GetAll(conds ...interface{}) (clientes []entities.Cliente, err error) {
+func (g *Gateway) GetAll(conds ...interface{}) (clientes *[]entities.Cliente, err error) {
 	result := g.repository.Find(&clientes, conds...)
 	if result.Error != nil {
 		log.Println(result.Error)

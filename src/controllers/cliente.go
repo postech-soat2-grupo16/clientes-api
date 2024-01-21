@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
-	cliente2 "github.com/postech-soat2-grupo16/clientes-api/adapters/cliente"
+	clienteAdapter "github.com/postech-soat2-grupo16/clientes-api/adapters/cliente"
 	"github.com/postech-soat2-grupo16/clientes-api/interfaces"
 	"github.com/postech-soat2-grupo16/clientes-api/util"
 )
@@ -32,18 +32,28 @@ func NewClienteController(useCase interfaces.ClienteUseCase, r *chi.Mux) *Client
 // @Tags		Clients
 // @ID			get-all-clients
 // @Produce	json
-// @Success	200	{object}	cliente2.Cliente
+// @Success	200	{object}	clienteAdapter.Cliente
 // @Param       cpf  query       string  false   "Optional Filter by CPF"
 // @Failure	500
 // @Router		/clientes [get]
 func (c *ClienteController) GetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		CPF := r.URL.Query().Get("cpf")
-		clientes, err := c.useCase.List(CPF)
+		clientesFetched, err := c.useCase.List(CPF)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		json.NewEncoder(w).Encode(clientes)
+
+		var clientes []*clienteAdapter.Cliente
+
+		if len(*clientesFetched) > 0 {
+			for _, cliente := range *clientesFetched {
+				clientes = append(clientes, clienteAdapter.FromUseCaseEntity(&cliente))
+			}
+			json.NewEncoder(w).Encode(clientes)
+		}
+
+		json.NewEncoder(w).Encode([]*clienteAdapter.Cliente{})
 	}
 }
 
@@ -54,7 +64,7 @@ func (c *ClienteController) GetAll() http.HandlerFunc {
 // @ID			get-client-by-id
 // @Produce	json
 // @Param		id	path		string	true	"Client ID"
-// @Success	200	{object}	cliente2.Cliente
+// @Success	200	{object}	clienteAdapter.Cliente
 // @Failure	404
 // @Router		/clientes/{id} [get]
 func (c *ClienteController) GetByID() http.HandlerFunc {
@@ -73,7 +83,7 @@ func (c *ClienteController) GetByID() http.HandlerFunc {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
-		json.NewEncoder(w).Encode(cliente)
+		json.NewEncoder(w).Encode(clienteAdapter.FromUseCaseEntity(cliente))
 	}
 }
 
@@ -83,13 +93,13 @@ func (c *ClienteController) GetByID() http.HandlerFunc {
 //
 // @ID			create-client
 // @Produce	json
-// @Param		data	body		cliente2.Cliente	true	"Client data"
-// @Success	200		{object}	cliente2.Cliente
+// @Param		data	body		clienteAdapter.Cliente	true	"Client data"
+// @Success	200		{object}	clienteAdapter.Cliente
 // @Failure	400
 // @Router		/clientes [post]
 func (c *ClienteController) Create() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var i cliente2.Cliente
+		var i clienteAdapter.Cliente
 		err := json.NewDecoder(r.Body).Decode(&i)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -106,7 +116,7 @@ func (c *ClienteController) Create() http.HandlerFunc {
 			return
 		}
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(cliente)
+		json.NewEncoder(w).Encode(clienteAdapter.FromUseCaseEntity(cliente))
 	}
 }
 
@@ -117,14 +127,14 @@ func (c *ClienteController) Create() http.HandlerFunc {
 // @ID			update-client
 // @Produce	json
 // @Param		id		path		string	true	"Client ID"
-// @Param		data	body		cliente2.Cliente	true	"Client data"
-// @Success	200		{object}	cliente2.Cliente
+// @Param		data	body		clienteAdapter.Cliente	true	"Client data"
+// @Success	200		{object}	clienteAdapter.Cliente
 // @Failure	404
 // @Failure	400
 // @Router		/clientes/{id} [put]
 func (c *ClienteController) Update() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var i cliente2.Cliente
+		var i clienteAdapter.Cliente
 		err := json.NewDecoder(r.Body).Decode(&i)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -157,7 +167,7 @@ func (c *ClienteController) Update() http.HandlerFunc {
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(cliente)
+		json.NewEncoder(w).Encode(clienteAdapter.FromUseCaseEntity(cliente))
 	}
 }
 

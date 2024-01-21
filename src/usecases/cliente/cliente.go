@@ -19,7 +19,7 @@ func NewUseCase(clienteGateway interfaces.ClienteGatewayI) *UseCase {
 	}
 }
 
-func (p *UseCase) List(CPF string) ([]entities.Cliente, error) {
+func (p *UseCase) List(CPF string) (*[]entities.Cliente, error) {
 	if CPF != "" {
 		client := entities.Cliente{CPF: CPF}
 		return p.clienteGateway.GetAll(client)
