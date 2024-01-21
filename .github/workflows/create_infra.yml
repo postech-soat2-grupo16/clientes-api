@@ -38,7 +38,7 @@ jobs:
         id: docker_build_tag_push
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: "orders-api-${{ env.UUID }}"
+          IMAGE_TAG: "clientes-api-${{ env.UUID }}"
           REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
         run: |
           echo "uuid - ${{ env.UUID }}"
