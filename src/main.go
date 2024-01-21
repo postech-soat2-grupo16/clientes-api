@@ -8,7 +8,7 @@ import (
 
 import (
 	_ "github.com/lib/pq"
-	"github.com/postech-soat2-grupo16/clientes-api/api"
+	api "github.com/postech-soat2-grupo16/clientes-api/api"
 	_ "github.com/postech-soat2-grupo16/clientes-api/docs"
 )
 
