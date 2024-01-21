@@ -1,0 +1,35 @@
+name: Upload File to S3
+
+on:
+  workflow_dispatch:
+
+jobs:
+  upload:
+    name: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v3
+
+      #AWS CREDENTIALS
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ vars.AWS_REGION}}
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+          role-session-name: myGitHubActions
+          
+      #Terraform execution
+      #Runs ECS Service
+      - name: Terraform Init
+        run: |
+          cd infra/terraform
+          terraform init -reconfigure
+
+      - name: Terraform Apply
+        run: |
+          cd infra/terraform
+          terraform apply -auto-approve    
