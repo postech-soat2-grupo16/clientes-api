@@ -23,9 +23,20 @@ func NewClienteController(useCase interfaces.ClienteUseCase, r *chi.Mux) *Client
 		r.Get("/{id}", controller.GetByID())
 		r.Put("/{id}", controller.Update())
 		r.Delete("/{id}", controller.Delete())
-		r.Get("/ping", nil)
+		r.Get("/healthcheck", controller.Ping)
 	})
 	return &controller
+}
+
+// @Summary	health check endpoint
+//
+// @Tags		Clients
+//
+// @ID			health-check
+// @Success	200
+// @Router		/clientes/healtcheck [get]
+func (c *ClienteController) Ping(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 }
 
 // @Summary	Get all clients
