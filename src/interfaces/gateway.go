@@ -11,3 +11,10 @@ type ClienteGatewayI interface {
 	GetByID(clienteID uint32) (*entities.Cliente, error)
 	GetAll(conds ...interface{}) (*[]entities.Cliente, error)
 }
+
+type BackofficeGatewayI interface {
+	Save(request entities.BackofficeRequest) (*entities.BackofficeRequest, error)
+	GetAll(conds ...interface{}) (*[]entities.BackofficeRequest, error)
+	GetByID(requestID uint32) (*entities.BackofficeRequest, error)
+	Update(request entities.BackofficeRequest) (*entities.BackofficeRequest, error)
+}

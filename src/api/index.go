@@ -6,7 +6,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/postech-soat2-grupo16/clientes-api/controllers"
 	"github.com/postech-soat2-grupo16/clientes-api/external"
+	bg "github.com/postech-soat2-grupo16/clientes-api/gateways/db/backoffice"
 	cg "github.com/postech-soat2-grupo16/clientes-api/gateways/db/cliente"
+	"github.com/postech-soat2-grupo16/clientes-api/usecases/backoffice"
 	"github.com/postech-soat2-grupo16/clientes-api/usecases/cliente"
 	httpSwagger "github.com/swaggo/http-swagger"
 	"gorm.io/gorm"
@@ -35,10 +37,13 @@ func mapRoutes(r *chi.Mux, orm *gorm.DB) {
 	// Injections
 	// Gateways
 	clienteGateway := cg.NewGateway(orm)
+	backofficeGateway := bg.NewGateway(orm)
 	// Use cases
 	clienteUseCase := cliente.NewUseCase(clienteGateway)
+	backOfficeUseCase := backoffice.NewUseCase(backofficeGateway)
 	// Handlers
-	_ = controllers.NewClienteController(clienteUseCase, r)
+	controllers.NewClienteController(clienteUseCase, r)
+	controllers.NewBackofficeController(backOfficeUseCase, r)
 }
 
 func commonMiddleware(next http.Handler) http.Handler {

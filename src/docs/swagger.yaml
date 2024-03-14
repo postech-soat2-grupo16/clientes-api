@@ -1,4 +1,23 @@
 definitions:
+  backoffice.BackofficeRequest:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      endereco:
+        type: string
+      id:
+        type: integer
+      nome:
+        type: string
+      processed:
+        type: boolean
+      telefone:
+        type: string
+      updated_at:
+        type: string
+    type: object
   cliente.Cliente:
     properties:
       cpf:
@@ -30,6 +49,68 @@ info:
   title: Orders API
   version: "1.0"
 paths:
+  /backoffice:
+    get:
+      operationId: get-all-requests
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backoffice.BackofficeRequest'
+        "500":
+          description: Internal Server Error
+      summary: Get all requests
+      tags:
+      - Backoffice
+  /backoffice/{id}/process-data-deletion:
+    patch:
+      operationId: process-data-deletion
+      parameters:
+      - description: Request ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Process data deletion
+      tags:
+      - Backoffice
+  /backoffice/request-data-deletion:
+    post:
+      consumes:
+      - application/json
+      operationId: request-data-deletion
+      parameters:
+      - description: Backoffice data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/backoffice.BackofficeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backoffice.BackofficeRequest'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Request to delete client data
+      tags:
+      - Backoffice
   /clientes:
     get:
       operationId: get-all-clients
@@ -136,6 +217,15 @@ paths:
         "404":
           description: Not Found
       summary: Update a client
+      tags:
+      - Clients
+  /clientes/healtcheck:
+    get:
+      operationId: health-check
+      responses:
+        "200":
+          description: OK
+      summary: health check endpoint
       tags:
       - Clients
 swagger: "2.0"
