@@ -24,6 +24,101 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/backoffice": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Backoffice"
+                ],
+                "summary": "Get all requests",
+                "operationId": "get-all-requests",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backoffice.BackofficeRequest"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/backoffice/request-data-deletion": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Backoffice"
+                ],
+                "summary": "Request to delete client data",
+                "operationId": "request-data-deletion",
+                "parameters": [
+                    {
+                        "description": "Backoffice data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backoffice.BackofficeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backoffice.BackofficeRequest"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/backoffice/{id}/process-data-deletion": {
+            "patch": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Backoffice"
+                ],
+                "summary": "Process data deletion",
+                "operationId": "process-data-deletion",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Request ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/clientes": {
             "get": {
                 "produces": [
@@ -83,6 +178,20 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/clientes/healtcheck": {
+            "get": {
+                "tags": [
+                    "Clients"
+                ],
+                "summary": "health check endpoint",
+                "operationId": "health-check",
+                "responses": {
+                    "200": {
+                        "description": "OK"
                     }
                 }
             }
@@ -190,6 +299,35 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "backoffice.BackofficeRequest": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "endereco": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "nome": {
+                    "type": "string"
+                },
+                "processed": {
+                    "type": "boolean"
+                },
+                "telefone": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
         "cliente.Cliente": {
             "type": "object",
             "properties": {
