@@ -71,3 +71,10 @@ variable "db_url" {
   sensitive   = true
   default     = ""
 }
+
+variable "sns_arn" {
+  description = "SNS Pagamentos URL"
+  type        = string
+  sensitive   = true
+  default     = ""
+}

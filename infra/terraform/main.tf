@@ -94,6 +94,8 @@ resource "aws_ecs_task_definition" "task_definition_clientes_api" {
 
       environment = [
         { "name" : "DATABASE_URL", "value" : var.db_url }
+        { "name" : "IS_LOCAL", "value" : "false" },
+        { "name": "NOTIFICATION_TOPIC", "value" : var.sns_arn}
       ]
 
 
