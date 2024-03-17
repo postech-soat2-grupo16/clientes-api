@@ -10,12 +10,15 @@ import (
 )
 
 type UseCase struct {
-	clienteGateway interfaces.ClienteGatewayI
+	clienteGateway      interfaces.ClienteGatewayI
+	notificationGateway interfaces.NotificationGatewayI
 }
 
-func NewUseCase(clienteGateway interfaces.ClienteGatewayI) *UseCase {
+func NewUseCase(clienteGateway interfaces.ClienteGatewayI,
+	notificationGateway interfaces.NotificationGatewayI) *UseCase {
 	return &UseCase{
-		clienteGateway: clienteGateway,
+		clienteGateway:      clienteGateway,
+		notificationGateway: notificationGateway,
 	}
 }
 
@@ -47,6 +50,9 @@ func (p *UseCase) Create(email, cpf, nome string) (*entities.Cliente, error) {
 		log.Fatal(err)
 		return nil, err
 	}
+
+	p.notificationGateway.ClientSubscriber(result)
+
 	return result, nil
 }
 

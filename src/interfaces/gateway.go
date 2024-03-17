@@ -18,3 +18,7 @@ type BackofficeGatewayI interface {
 	GetByID(requestID uint32) (*entities.BackofficeRequest, error)
 	Update(request entities.BackofficeRequest) (*entities.BackofficeRequest, error)
 }
+
+type NotificationGatewayI interface {
+	ClientSubscriber(cliente *entities.Cliente) error
+}
